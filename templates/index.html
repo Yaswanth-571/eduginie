@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>EduGenie – Your AI Learning Companion</title>
+  <meta name="description" content="EduGenie is an AI-powered learning assistant built with Google Gemini. Get instant answers, concept explanations, quizzes, summaries, and personalised learning paths." />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- ======================================================= -->
+    <!-- LEFT SIDEBAR                                            -->
+    <!-- ======================================================= -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Top Brand Row -->
+      <div class="sidebar-brand">
+        <div class="brand-logo-group">
+          <div class="brand-book-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <defs>
+                <linearGradient id="bookCyan" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38BDF8"/>
+                  <stop offset="1" stop-color="#6366F1"/>
+                </linearGradient>
+                <linearGradient id="bookPurple" x1="32" y1="0" x2="0" y2="32" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#818CF8"/>
+                  <stop offset="1" stop-color="#C084FC"/>
+                </linearGradient>
+                <filter id="bookGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+              <!-- Glowing Book SVG -->
+              <path d="M16 8C12 5 6 5 3 6V26C6 25 12 25 16 28C20 25 26 25 29 26V6C26 5 20 5 16 8Z" fill="#0B132B" stroke="#38BDF8" stroke-width="1.8"/>
+              <path d="M16 8V28" stroke="#38BDF8" stroke-width="1.8"/>
+              <path d="M3 6C6 5 12 5 16 8V28C12 25 6 25 3 26V6Z" fill="url(#bookCyan)" opacity="0.85"/>
+              <path d="M29 6C26 5 20 5 16 8V28C20 25 26 25 29 26V6Z" fill="url(#bookPurple)" opacity="0.85"/>
+              <path d="M6 11H13M6 15H13M6 19H11" stroke="#E0F2FE" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M19 11H26M19 15H26M21 19H26" stroke="#FAF5FF" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-name"><span class="brand-edu">Edu</span><span class="brand-genie">Genie</span></h1>
+            <p class="brand-tagline">Your AI Learning Companion</p>
+          </div>
+        </div>
+        <button class="sidebar-collapse-btn" id="sidebar-toggle" title="Toggle Sidebar" aria-label="Toggle Sidebar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="11 17 6 12 11 7"></polyline>
+            <polyline points="18 17 13 12 18 7"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- + New Chat Button -->
+      <div class="new-chat-wrapper">
+        <button class="new-chat-btn" id="new-chat-btn" type="button">
+          <span class="plus-circle">+</span>
+          <span class="btn-label">New Chat</span>
+        </button>
+      </div>
+
+      <!-- Nav Section: Features -->
+      <div class="sidebar-section">
+        <div class="section-title">Features</div>
+        <ul class="nav-list">
+          <li class="nav-item active" data-feature="chat">
+            <a href="#" class="nav-link" id="nav-chat">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Chat</span>
+            </a>
+          </li>
+          <li class="nav-item" data-feature="saved">
+            <a href="#" class="nav-link" id="nav-saved">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Saved</span>
+            </a>
+          </li>
+          <li class="nav-item" data-feature="history">
+            <a href="#" class="nav-link" id="nav-history">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </span>
+              <span class="nav-text">History</span>
+            </a>
+          </li>
+          <li class="nav-item" data-feature="library">
+            <a href="#" class="nav-link" id="nav-library">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                </svg>
+              </span>
+              <span class="nav-text">Library</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Nav Section: Study Tools -->
+      <div class="sidebar-section">
+        <div class="section-title">Study Tools</div>
+        <ul class="nav-list">
+          <li class="nav-item" data-tool="quiz">
+            <a href="#" class="nav-link" id="tool-quiz">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <polyline points="9 15 11 17 15 13"></polyline>
+                </svg>
+              </span>
+              <span class="nav-text">Quiz</span>
+            </a>
+          </li>
+          <li class="nav-item" data-tool="explain">
+            <a href="#" class="nav-link" id="tool-explain">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 2v7.31L4.62 19.4A2 2 0 0 0 6.38 22h11.24a2 2 0 0 0 1.76-2.6L14 9.31V2"></path>
+                  <line x1="8.5" y1="2" x2="15.5" y2="2"></line>
+                </svg>
+              </span>
+              <span class="nav-text">Explain</span>
+            </a>
+          </li>
+          <li class="nav-item" data-tool="summarize">
+            <a href="#" class="nav-link" id="tool-summarize">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span class="nav-text">Summarize</span>
+            </a>
+          </li>
+          <li class="nav-item" data-tool="learn">
+            <a href="#" class="nav-link" id="tool-learn">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"></line>
+                  <line x1="12" y1="20" x2="12" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+              </span>
+              <span class="nav-text">Learning Path</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ======================================================= -->
+    <!-- MAIN WORKSPACE                                          -->
+    <!-- ======================================================= -->
+    <main class="main-workspace" id="main-workspace">
+
+      <!-- Landscape & Cosmic Background Layers -->
+      <div class="bg-stars"></div>
+      <div class="bg-cosmic-glow"></div>
+      <div class="bg-planet-rim"></div>
+      <div class="bg-mountains">
+        <svg viewBox="0 0 1440 320" preserveAspectRatio="none" fill="none">
+          <defs>
+            <linearGradient id="mountGrad" x1="0" y1="0" x2="0" y2="320" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#0e1730" stop-opacity="0.8"/>
+              <stop offset="0.6" stop-color="#080c1d" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#04060e"/>
+            </linearGradient>
+            <linearGradient id="peakHaze" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#38BDF8" stop-opacity="0.25"/>
+              <stop offset="0.5" stop-color="#6366F1" stop-opacity="0.3"/>
+              <stop offset="1" stop-color="#00D4AA" stop-opacity="0.15"/>
+            </linearGradient>
+          </defs>
+          <!-- Background ridge -->
+          <path d="M0,180 L180,120 L360,190 L540,110 L720,170 L900,100 L1100,160 L1280,120 L1440,170 L1440,320 L0,320 Z" fill="#060918" opacity="0.6"/>
+          <!-- Foreground ridge with atmospheric ridge glow -->
+          <path d="M0,220 L140,170 L290,210 L480,140 L660,195 L840,135 L1020,180 L1220,145 L1440,200 L1440,320 L0,320 Z" fill="url(#mountGrad)"/>
+          <path d="M0,220 L140,170 L290,210 L480,140 L660,195 L840,135 L1020,180 L1220,145 L1440,200" stroke="url(#peakHaze)" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <!-- Top Workspace Header -->
+      <header class="workspace-header">
+        <div class="header-left">
+          <!-- Model selector pill -->
+          <div class="model-badge">
+            <span class="sparkle-icon">✦</span>
+            <span class="model-name">EduGenie • Gemini</span>
+            <span class="chevron-down">▼</span>
+          </div>
+        </div>
+
+        <div class="header-right"></div>
+      </header>
+
+      <!-- Center Content Area (Hero + Chat Viewport) -->
+      <div class="content-scroll-container" id="content-scroll-container">
+
+        <!-- ======================================================= -->
+        <!-- 5. HERO SECTION (Shown initially)                       -->
+        <!-- ======================================================= -->
+        <section class="hero-section" id="hero-section">
+          <!-- Robot Mascot with Graduation Cap & Orbital Rings -->
+          <div class="mascot-container">
+            <svg class="mascot-svg" width="220" height="200" viewBox="0 0 220 200" fill="none">
+              <defs>
+                <!-- Glowing Orbital Gradients -->
+                <linearGradient id="orbGradCyan" x1="0" y1="0" x2="220" y2="200" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#38BDF8"/>
+                  <stop offset="0.5" stop-color="#818CF8"/>
+                  <stop offset="1" stop-color="#C084FC" stop-opacity="0.2"/>
+                </linearGradient>
+                <linearGradient id="orbGradPurple" x1="220" y1="0" x2="0" y2="200" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#A855F7"/>
+                  <stop offset="0.6" stop-color="#38BDF8"/>
+                  <stop offset="1" stop-color="#00D4AA" stop-opacity="0.1"/>
+                </linearGradient>
+
+                <!-- Robot Head Gradient -->
+                <radialGradient id="robotHeadGrad" cx="40%" cy="35%" r="65%">
+                  <stop stop-color="#60A5FA"/>
+                  <stop offset="35%" stop-color="#2563EB"/>
+                  <stop offset="70%" stop-color="#1E1B4B"/>
+                  <stop offset="100%" stop-color="#090D1A"/>
+                </radialGradient>
+
+                <!-- Visor Screen Gradient -->
+                <linearGradient id="visorGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop stop-color="#050C1F"/>
+                  <stop offset="1" stop-color="#0F172A"/>
+                </linearGradient>
+
+                <!-- Glow Filters -->
+                <filter id="cyanNeonGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="4" result="blur1"/>
+                  <feGaussianBlur stdDeviation="8" result="blur2"/>
+                  <feMerge>
+                    <feMergeNode in="blur2"/>
+                    <feMergeNode in="blur1"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <filter id="purpleHalo" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="16" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- Ambient Purple/Blue Halo -->
+              <circle cx="110" cy="105" r="55" fill="#4F46E5" opacity="0.35" filter="url(#purpleHalo)"/>
+              <circle cx="110" cy="105" r="42" fill="#38BDF8" opacity="0.25" filter="url(#purpleHalo)"/>
+
+              <!-- Outer Orbital Ring 1 (Tilted Left) -->
+              <ellipse cx="110" cy="105" rx="98" ry="32" transform="rotate(-18 110 105)" stroke="url(#orbGradCyan)" stroke-width="1.8" stroke-dasharray="140 12 40 8" opacity="0.85"/>
+
+              <!-- Outer Orbital Ring 2 (Tilted Right) -->
+              <ellipse cx="110" cy="105" rx="90" ry="26" transform="rotate(22 110 105)" stroke="url(#orbGradPurple)" stroke-width="1.5" stroke-dasharray="100 8 60 14" opacity="0.75"/>
+
+              <!-- Sparkles & Particles on Orbit -->
+              <polygon points="28,82 31,85 28,88 25,85" fill="#38BDF8" filter="url(#cyanNeonGlow)"/>
+              <polygon points="186,132 189,135 186,138 183,135" fill="#C084FC" filter="url(#cyanNeonGlow)"/>
+              <circle cx="178" cy="74" r="2.2" fill="#E0F2FE" filter="url(#cyanNeonGlow)"/>
+              <circle cx="48" cy="142" r="1.8" fill="#38BDF8"/>
+              <circle cx="140" cy="52" r="1.6" fill="#FBBF24"/>
+
+              <!-- Robot Head Shell -->
+              <circle cx="110" cy="108" r="42" fill="url(#robotHeadGrad)" stroke="#38BDF8" stroke-width="1.6"/>
+
+              <!-- Visor Screen -->
+              <rect x="78" y="94" width="64" height="30" rx="14" fill="url(#visorGrad)" stroke="#1E293B" stroke-width="1.2"/>
+
+              <!-- Glowing Cyan Smiling Eyes -->
+              <ellipse cx="94" cy="108" rx="4.5" ry="6.5" fill="#38BDF8" filter="url(#cyanNeonGlow)"/>
+              <ellipse cx="126" cy="108" rx="4.5" ry="6.5" fill="#38BDF8" filter="url(#cyanNeonGlow)"/>
+              <ellipse cx="95.5" cy="106" rx="1.6" ry="2.2" fill="#FFFFFF"/>
+              <ellipse cx="127.5" cy="106" rx="1.6" ry="2.2" fill="#FFFFFF"/>
+
+              <!-- Graduation Cap (Mortarboard) -->
+              <!-- Skull cap base -->
+              <path d="M84 74 Q110 82 136 74 L132 80 Q110 88 88 80 Z" fill="#090D1A" stroke="#38BDF8" stroke-width="0.8"/>
+              <!-- Diamond Top Plate -->
+              <polygon points="110,48 158,62 110,76 62,62" fill="#0A0E22" stroke="#60A5FA" stroke-width="2"/>
+              <polygon points="110,50 152,62 110,74 68,62" fill="#0F172A" opacity="0.9"/>
+              <!-- Center Button & Golden Tassel -->
+              <circle cx="110" cy="62" r="3.2" fill="#FBBF24" stroke="#D97706" stroke-width="0.8"/>
+              <path d="M110 62 Q132 66 142 80" stroke="#FBBF24" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+              <circle cx="142" cy="81" r="2.4" fill="#F59E0B"/>
+              <path d="M140 83 L144 94 L138 94 Z" fill="#F59E0B"/>
+            </svg>
+          </div>
+
+          <!-- Hero Headline & Description -->
+          <h2 class="hero-title">
+            Ready to learn <span class="gradient-text">something new?</span>
+          </h2>
+          <p class="hero-subtitle">
+            Ask questions, get explanations, practice with quizzes, summarize content and build your personalized learning path — all with EduGenie.
+          </p>
+        </section>
+
+        <!-- ======================================================= -->
+        <!-- CHAT CONVERSATION STREAM (Shown when chatting)          -->
+        <!-- ======================================================= -->
+        <section class="chat-stream hidden" id="chat-stream">
+          <!-- Dynamic conversation messages will append here -->
+        </section>
+
+      </div><!-- /.content-scroll-container -->
+
+      <!-- ======================================================= -->
+      <!-- BOTTOM INTERACTION AREA (Task Selector + Composer)      -->
+      <!-- ======================================================= -->
+      <footer class="bottom-interaction-panel">
+
+        <!-- 7. TASK SELECTOR (BELOW hero/chat & ABOVE input box) -->
+        <div class="task-selector-wrapper" role="tablist" aria-label="Study Mode Selection">
+          <div class="task-pills-row">
+            <button class="task-pill active" data-task="qa" role="tab" aria-selected="true">
+              <span class="pill-icon">💬</span>
+              <span class="pill-text">Q&amp;A</span>
+            </button>
+            <button class="task-pill" data-task="explain" role="tab" aria-selected="false">
+              <span class="pill-icon">⚗</span>
+              <span class="pill-text">Concept Explanation</span>
+            </button>
+            <button class="task-pill" data-task="quiz" role="tab" aria-selected="false">
+              <span class="pill-icon">📝</span>
+              <span class="pill-text">Quiz</span>
+            </button>
+            <button class="task-pill" data-task="summarize" role="tab" aria-selected="false">
+              <span class="pill-icon">📄</span>
+              <span class="pill-text">Summarization</span>
+            </button>
+            <button class="task-pill" data-task="learn" role="tab" aria-selected="false">
+              <span class="pill-icon">📊</span>
+              <span class="pill-text">Learning Path</span>
+            </button>
+          </div>
+
+          <!-- Compact Level Selector (Visible when 'Learning Path' is active) -->
+          <div class="learning-level-bar hidden" id="learning-level-bar">
+            <span class="level-caption">Select Target Level:</span>
+            <div class="level-pills-group">
+              <button type="button" class="level-pill active" data-level="beginner">🟢 Beginner</button>
+              <button type="button" class="level-pill" data-level="intermediate">🟡 Intermediate</button>
+              <button type="button" class="level-pill" data-level="advanced">🔴 Advanced</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 & 9. MAIN CHAT INPUT (COMPOSER) -->
+        <div class="composer-container" id="composer-container">
+          <!-- Textarea -->
+          <textarea
+            id="chat-textarea"
+            class="composer-textarea"
+            placeholder="Ask EduGenie anything..."
+            rows="1"
+            aria-label="Ask EduGenie anything..."
+          ></textarea>
+
+          <!-- Composer Bottom Controls Row -->
+          <div class="composer-bottom-row">
+            <div class="composer-left-actions">
+              <button type="button" class="action-pill-btn" id="btn-attach" title="Attach file (Future Feature)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                </svg>
+                <span>Attach</span>
+              </button>
+
+              <button type="button" class="action-pill-btn" id="btn-options" title="Options">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="4" y1="21" x2="4" y2="14"></line>
+                  <line x1="4" y1="10" x2="4" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12" y2="3"></line>
+                  <line x1="20" y1="21" x2="20" y2="16"></line>
+                  <line x1="20" y1="12" x2="20" y2="3"></line>
+                  <line x1="1" y1="14" x2="7" y2="14"></line>
+                  <line x1="9" y1="8" x2="15" y2="8"></line>
+                  <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+                <span>Options</span>
+              </button>
+
+              <button type="button" class="action-pill-btn" id="btn-voice" title="Voice Input (Future Feature)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+                <span>Voice</span>
+              </button>
+            </div>
+
+            <!-- Glowing Send Button -->
+            <button class="composer-send-btn" id="send-btn" type="button" title="Send (Enter)" aria-label="Send Request">
+              <svg class="send-arrow-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </footer>
+
+    </main><!-- /.main-workspace -->
+
+  </div><!-- /.app-container -->
+
+  <!-- ======================================================= -->
+  <!-- FRONTEND JAVASCRIPT                                     -->
+  <!-- ======================================================= -->
+  <script>
+    // ── Application State ────────────────────────────────────
+    let currentTask = 'qa';
+    let currentLevel = 'beginner';
+    let isProcessing = false;
+    let messageCounter = 0;
+
+    // Task Configurations (Exact Backend Endpoints & Payloads)
+    const taskDefs = {
+      qa: {
+        name: 'Q&A',
+        badge: '💬 Q&A',
+        placeholder: 'Ask EduGenie anything...',
+        endpoint: '/qa',
+        buildPayload: (text) => ({ question: text.trim() }),
+        validate: (text) => text.trim() ? null : 'Please enter your question.'
+      },
+      explain: {
+        name: 'Concept Explanation',
+        badge: '⚗ Explanation',
+        placeholder: 'Enter a topic to explain (e.g. Binary Search, SQL Injection, Quantum Computing)...',
+        endpoint: '/explain',
+        buildPayload: (text) => ({ topic: text.trim() }),
+        validate: (text) => text.trim() ? null : 'Please enter a topic to explain.'
+      },
+      quiz: {
+        name: 'Quiz',
+        badge: '📝 Quiz',
+        placeholder: 'Enter an educational topic or paste notes to generate a 3-question quiz...',
+        endpoint: '/quiz',
+        buildPayload: (text) => ({ text: text.trim() }),
+        validate: (text) => text.trim() ? null : 'Please enter educational text or a topic for the quiz.'
+      },
+      summarize: {
+        name: 'Summarization',
+        badge: '📄 Summary',
+        placeholder: 'Paste the educational text, notes, or article you want to summarise...',
+        endpoint: '/summarize',
+        buildPayload: (text) => ({ text: text.trim() }),
+        validate: (text) => text.trim() ? null : 'Please paste text to summarise.'
+      },
+      learn: {
+        name: 'Learning Path',
+        badge: '📊 Learning Path',
+        placeholder: 'Enter a topic to build a structured learning path (e.g. Python, Fullstack, AI)...',
+        endpoint: '/learn/recommendations',
+        buildPayload: (text) => ({ topic: text.trim(), level: currentLevel }),
+        validate: (text) => text.trim() ? null : 'Please enter a topic for learning recommendations.'
+      }
+    };
+
+    // ── DOM References ───────────────────────────────────────
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const newChatBtn = document.getElementById('new-chat-btn');
+    const heroSection = document.getElementById('hero-section');
+    const chatStream = document.getElementById('chat-stream');
+    const contentScrollContainer = document.getElementById('content-scroll-container');
+    const chatTextarea = document.getElementById('chat-textarea');
+    const sendBtn = document.getElementById('send-btn');
+    const composerContainer = document.getElementById('composer-container');
+    const taskPills = document.querySelectorAll('.task-pill');
+    const learningLevelBar = document.getElementById('learning-level-bar');
+    const levelPills = document.querySelectorAll('.level-pill');
+
+    // ── HTML Escaper ─────────────────────────────────────────
+    function esc(str) {
+      if (typeof str !== 'string') return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // ── Markdown Parser ──────────────────────────────────────
+    function parseMarkdown(raw) {
+      if (!raw) return '';
+      let text = esc(raw);
+
+      // Fenced code blocks
+      text = text.replace(/```([a-zA-Z0-9_\-]*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        return `<pre class="md-code-block"><div class="code-head"><span>${lang || 'CODE'}</span><button type="button" class="code-copy-btn" onclick="copyCode(this)">Copy</button></div><code>${code.trim()}</code></pre>`;
+      });
+
+      // Inline code
+      text = text.replace(/`([^`]+)`/g, '<code class="md-inline-code">$1</code>');
+
+      // Headings
+      text = text.replace(/^### (.*$)/gim, '<h4 class="md-h4">$1</h4>');
+      text = text.replace(/^## (.*$)/gim, '<h3 class="md-h3">$1</h3>');
+      text = text.replace(/^# (.*$)/gim, '<h2 class="md-h2">$1</h2>');
+
+      // Bold & Italic
+      text = text.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>');
+      text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+      text = text.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+      // Blockquotes
+      text = text.replace(/^\> (.*$)/gim, '<blockquote class="md-quote">$1</blockquote>');
+
+      // Unordered lists
+      text = text.replace(/^[\*\-] (.+)$/gim, '<li class="md-li">$1</li>');
+      text = text.replace(/((?:<li class="md-li">.*<\/li>\s*)+)/g, '<ul class="md-ul">$1</ul>');
+
+      // Ordered lists
+      text = text.replace(/^\d+\.\s+(.+)$/gim, '<li class="md-oli">$1</li>');
+      text = text.replace(/((?:<li class="md-oli">.*<\/li>\s*)+)/g, '<ol class="md-ol">$1</ol>');
+
+      // Paragraphs
+      text = text.split(/\n{2,}/).map(para => {
+        para = para.trim();
+        if (!para) return '';
+        if (/^<(h[2-4]|ul|ol|pre|blockquote)/i.test(para)) return para;
+        return `<p class="md-para">${para.replace(/\n/g, '<br/>')}</p>`;
+      }).join('');
+
+      return text;
+    }
+
+    // ── Auto-scroll to Bottom ────────────────────────────────
+    function scrollWorkspaceToBottom() {
+      contentScrollContainer.scrollTo({
+        top: contentScrollContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+
+    // ── Auto-resize Textarea ─────────────────────────────────
+    function resizeComposerInput() {
+      chatTextarea.style.height = 'auto';
+      const nextH = Math.min(chatTextarea.scrollHeight, 160);
+      chatTextarea.style.height = nextH + 'px';
+    }
+
+    chatTextarea.addEventListener('input', () => {
+      resizeComposerInput();
+      const hasContent = chatTextarea.value.trim().length > 0;
+      sendBtn.classList.toggle('has-text', hasContent);
+    });
+
+    // ── Task Pill Selection ──────────────────────────────────
+    function selectTask(taskKey) {
+      if (!taskDefs[taskKey]) return;
+      currentTask = taskKey;
+
+      taskPills.forEach(pill => {
+        const isActive = pill.dataset.task === taskKey;
+        pill.classList.toggle('active', isActive);
+        pill.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      // Show/hide level selector for Learning Path
+      if (currentTask === 'learn') {
+        learningLevelBar.classList.remove('hidden');
+      } else {
+        learningLevelBar.classList.add('hidden');
+      }
+
+      chatTextarea.placeholder = taskDefs[currentTask].placeholder;
+      chatTextarea.focus();
+    }
+
+    taskPills.forEach(pill => {
+      pill.addEventListener('click', () => selectTask(pill.dataset.task));
+    });
+
+    // ── Level Selector ───────────────────────────────────────
+    levelPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        levelPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentLevel = pill.dataset.level;
+      });
+    });
+
+    // ── Sidebar Study Tools Navigation ───────────────────────
+    document.querySelectorAll('[data-tool]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tool = item.dataset.tool;
+        selectTask(tool);
+        chatTextarea.focus();
+      });
+    });
+
+    // ── Sidebar Toggle (Mobile / Collapse) ───────────────────
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+      });
+    }
+
+    // ── Reset / New Chat ─────────────────────────────────────
+    newChatBtn.addEventListener('click', () => {
+      chatStream.innerHTML = '';
+      chatStream.classList.add('hidden');
+      heroSection.classList.remove('hidden');
+      chatTextarea.value = '';
+      resizeComposerInput();
+      sendBtn.classList.remove('has-text');
+      selectTask('qa');
+      contentScrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ── Interactive Structured Quiz Renderer ─────────────────
+    function renderQuizCards(quizData, idSuffix) {
+      const optionLetters = ['A', 'B', 'C', 'D'];
+      const questions = quizData.questions || [];
+
+      if (!questions.length) return '<p class="md-para">No quiz questions generated.</p>';
+
+      let html = '<div class="quiz-container">';
+      questions.forEach((q, qIndex) => {
+        const qId = `quiz-q-${idSuffix}-${qIndex}`;
+        const escapedCorrect = esc(q.correct_answer).replace(/'/g, "\\'");
+
+        html += `
+          <div class="quiz-card" id="${qId}">
+            <div class="quiz-card-header">
+              <span class="q-num-badge">Question ${qIndex + 1} of ${questions.length}</span>
+              <h4 class="q-title">${esc(q.question)}</h4>
+            </div>
+            <div class="options-container">
+              ${(q.options || []).map((opt, optIndex) => `
+                <button
+                  type="button"
+                  class="quiz-opt-btn"
+                  id="opt-${idSuffix}-${qIndex}-${optIndex}"
+                  onclick="handleQuizOption('${idSuffix}', ${qIndex}, ${optIndex}, '${escapedCorrect}')"
+                >
+                  <span class="opt-badge">${optionLetters[optIndex]}</span>
+                  <span class="opt-text">${esc(opt)}</span>
+                </button>
+              `).join('')}
+            </div>
+            <div class="quiz-card-footer">
+              <button
+                type="button"
+                class="reveal-btn"
+                id="rev-btn-${idSuffix}-${qIndex}"
+                onclick="handleQuizReveal('${idSuffix}', ${qIndex}, '${escapedCorrect}')"
+              >
+                Reveal Answer
+              </button>
+              <div class="answer-box hidden" id="rev-box-${idSuffix}-${qIndex}">
+                <div class="answer-title">✅ Correct Answer: <strong>${esc(q.correct_answer)}</strong></div>
+                ${q.explanation ? `<div class="answer-expl">${esc(q.explanation)}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      return html;
+    }
+
+    window.handleQuizOption = function(idSuffix, qIndex, optIndex, correctAnswer) {
+      const qCard = document.getElementById(`quiz-q-${idSuffix}-${qIndex}`);
+      if (!qCard) return;
+
+      const chosenBtn = document.getElementById(`opt-${idSuffix}-${qIndex}-${optIndex}`);
+      const chosenText = chosenBtn.querySelector('.opt-text').textContent.trim();
+      const allButtons = qCard.querySelectorAll('.quiz-opt-btn');
+
+      allButtons.forEach(btn => {
+        btn.disabled = true;
+        const btnText = btn.querySelector('.opt-text').textContent.trim();
+        if (btnText === correctAnswer) {
+          btn.classList.add('correct');
+        }
+      });
+
+      if (chosenText !== correctAnswer) {
+        chosenBtn.classList.add('wrong');
+      }
+
+      const revBox = document.getElementById(`rev-box-${idSuffix}-${qIndex}`);
+      if (revBox) revBox.classList.remove('hidden');
+
+      const revBtn = document.getElementById(`rev-btn-${idSuffix}-${qIndex}`);
+      if (revBtn) revBtn.classList.add('hidden');
+    };
+
+    window.handleQuizReveal = function(idSuffix, qIndex, correctAnswer) {
+      const qCard = document.getElementById(`quiz-q-${idSuffix}-${qIndex}`);
+      if (!qCard) return;
+
+      const allButtons = qCard.querySelectorAll('.quiz-opt-btn');
+      allButtons.forEach(btn => {
+        btn.disabled = true;
+        const btnText = btn.querySelector('.opt-text').textContent.trim();
+        if (btnText === correctAnswer) {
+          btn.classList.add('correct');
+        }
+      });
+
+      const revBox = document.getElementById(`rev-box-${idSuffix}-${qIndex}`);
+      if (revBox) revBox.classList.remove('hidden');
+
+      const revBtn = document.getElementById(`rev-btn-${idSuffix}-${qIndex}`);
+      if (revBtn) revBtn.classList.add('hidden');
+    };
+
+    window.copyCode = function(btn) {
+      const code = btn.closest('.md-code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    };
+
+    window.copyAnswer = function(btn) {
+      const text = btn.closest('.message-card').querySelector('.message-body').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.textContent = '📋 Copy'; }, 2000);
+      });
+    };
+
+    // ── Append User Message ──────────────────────────────────
+    function appendUserMessage(text, taskKey) {
+      // Transition from hero to chat
+      heroSection.classList.add('hidden');
+      chatStream.classList.remove('hidden');
+
+      const row = document.createElement('div');
+      row.className = 'chat-row user-row';
+      row.innerHTML = `
+        <div class="user-message-card">
+          <div class="message-meta-row">
+            <span class="user-task-tag">${esc(taskDefs[taskKey].badge)}</span>
+          </div>
+          <div class="user-text">${esc(text).replace(/\n/g, '<br/>')}</div>
+        </div>
+      `;
+      chatStream.appendChild(row);
+      scrollWorkspaceToBottom();
+    }
+
+    // ── Append Loading State ─────────────────────────────────
+    function showLoadingBubble(taskKey) {
+      const row = document.createElement('div');
+      row.className = 'chat-row ai-row loading-row';
+      row.id = 'ai-loading-bubble';
+      row.innerHTML = `
+        <div class="ai-avatar-badge">🤖</div>
+        <div class="message-card loading-card">
+          <div class="message-meta-row">
+            <span class="ai-author">EduGenie</span>
+            <span class="ai-task-tag">${esc(taskDefs[taskKey].name)}</span>
+          </div>
+          <div class="loading-indicator-body">
+            <div class="pulsing-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="loading-label">EduGenie is thinking...</span>
+          </div>
+        </div>
+      `;
+      chatStream.appendChild(row);
+      scrollWorkspaceToBottom();
+    }
+
+    function removeLoadingBubble() {
+      const el = document.getElementById('ai-loading-bubble');
+      if (el) el.remove();
+    }
+
+    // ── Append AI Response ───────────────────────────────────
+    function appendAIMessage(htmlContent, taskKey, subTag = '') {
+      removeLoadingBubble();
+      messageCounter++;
+
+      const row = document.createElement('div');
+      row.className = 'chat-row ai-row';
+      row.innerHTML = `
+        <div class="ai-avatar-badge">🤖</div>
+        <div class="message-card">
+          <div class="message-meta-row">
+            <div class="meta-left">
+              <span class="ai-author">EduGenie</span>
+              <span class="ai-task-tag">${esc(taskDefs[taskKey].badge)}</span>
+              ${subTag ? `<span class="ai-sub-tag">${esc(subTag)}</span>` : ''}
+            </div>
+            <button type="button" class="copy-ans-btn" onclick="copyAnswer(this)">📋 Copy</button>
+          </div>
+          <div class="message-body">${htmlContent}</div>
+        </div>
+      `;
+      chatStream.appendChild(row);
+      scrollWorkspaceToBottom();
+    }
+
+    // ── Append Error Message ─────────────────────────────────
+    function appendErrorMessage(err) {
+      removeLoadingBubble();
+      console.error('EduGenie Backend/API Error:', err);
+
+      const row = document.createElement('div');
+      row.className = 'chat-row ai-row';
+      row.innerHTML = `
+        <div class="ai-avatar-badge error-avatar">⚠️</div>
+        <div class="message-card error-card">
+          <div class="message-meta-row">
+            <span class="ai-author">EduGenie</span>
+            <span class="error-tag">System Notice</span>
+          </div>
+          <div class="error-body">
+            <p class="error-primary">EduGenie is temporarily unavailable. Please try again.</p>
+            <p class="error-secondary">Ensure your Gemini API credentials or local service are active.</p>
+          </div>
+        </div>
+      `;
+      chatStream.appendChild(row);
+      scrollWorkspaceToBottom();
+    }
+
+    // ── Send Request Handler ─────────────────────────────────
+    async function handleSubmission() {
+      if (isProcessing) return;
+
+      const rawText = chatTextarea.value.trim();
+      const config = taskDefs[currentTask];
+
+      // Client validation
+      const validationError = config.validate(rawText);
+      if (validationError) {
+        composerContainer.classList.add('shake');
+        chatTextarea.focus();
+        setTimeout(() => composerContainer.classList.remove('shake'), 450);
+        return;
+      }
+
+      // Display user message in chat stream
+      appendUserMessage(rawText, currentTask);
+
+      // Reset textarea
+      chatTextarea.value = '';
+      resizeComposerInput();
+      sendBtn.classList.remove('has-text');
+
+      // Lock UI
+      isProcessing = true;
+      sendBtn.disabled = true;
+      chatTextarea.disabled = true;
+      showLoadingBubble(currentTask);
+
+      const taskSnapshot = currentTask;
+      const levelSnapshot = currentLevel;
+
+      try {
+        const payload = config.buildPayload(rawText);
+
+        const response = await fetch(config.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || `HTTP ${response.status}`);
+        }
+
+        // Format according to task schema
+        let renderedHTML = '';
+        let subTag = '';
+
+        switch (taskSnapshot) {
+          case 'qa':
+            renderedHTML = parseMarkdown(data.answer);
+            break;
+
+          case 'explain':
+            subTag = data.topic ? `Topic: ${data.topic}` : '';
+            renderedHTML = parseMarkdown(data.explanation);
+            break;
+
+          case 'quiz':
+            renderedHTML = renderQuizCards(data, messageCounter + 1);
+            break;
+
+          case 'summarize':
+            renderedHTML = parseMarkdown(data.summary);
+            break;
+
+          case 'learn':
+            subTag = `${data.level ? data.level.toUpperCase() : levelSnapshot.toUpperCase()} · ${data.topic || ''}`;
+            renderedHTML = parseMarkdown(data.recommendations);
+            break;
+        }
+
+        appendAIMessage(renderedHTML, taskSnapshot, subTag);
+
+      } catch (err) {
+        appendErrorMessage(err);
+      } finally {
+        isProcessing = false;
+        sendBtn.disabled = false;
+        chatTextarea.disabled = false;
+        chatTextarea.focus();
+      }
+    }
+
+    // ── Listeners ────────────────────────────────────────────
+    sendBtn.addEventListener('click', handleSubmission);
+
+    chatTextarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmission();
+      }
+    });
+
+    // Default init
+    window.addEventListener('DOMContentLoaded', () => {
+      selectTask('qa');
+    });
+  </script>
+</body>
+</html>
